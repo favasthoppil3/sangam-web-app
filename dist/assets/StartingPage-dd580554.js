@@ -1,4 +1,4 @@
-import{s as i,u as o,a as c,R as l,r,j as d,b as e,B as f,S as t,T as g}from"./index-4e52b8fc.js";const u="/assets/sangam-logo-6e61372f.png",m=i.div`
+import{s as i,u as o,a as c,R as l,r,j as d,b as e,B as f,S as t,T as g}from"./index-71cd164b.js";const u="/assets/sangam-logo-6e61372f.png",m=i.div`
   background-color: #fff;
   .main_container {
     width: 100%;

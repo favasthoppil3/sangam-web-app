@@ -62,6 +62,9 @@ dependencies:
   '@types/react-dom':
     specifier: ^18.0.10
     version: 18.0.10
+  '@types/redux':
+    specifier: ^3.6.0
+    version: 3.6.0
   aos:
     specifier: ^2.3.4
     version: 2.3.4
@@ -116,6 +119,9 @@ dependencies:
   react-swipeable-views:
     specifier: ^0.14.0
     version: 0.14.0(react@18.2.0)
+  redux:
+    specifier: ^4.2.1
+    version: 4.2.1
   redux-logger:
     specifier: ^3.0.6
     version: 3.0.6
@@ -5629,6 +5635,13 @@ packages:
     dependencies:
       redux: 4.2.1
     dev: true
+
+  /@types/redux@3.6.0:
+    resolution: {integrity: sha512-ic+60DXHW5seNyqFvfr7Sk5cnXs+HsF9tIeIaxjOuSP5kzgDXC+AzKTYmjAfuLx4Sccm/0vjwBQj3OOkUkwOqg==}
+    deprecated: This is a stub types definition for Redux (https://github.com/reactjs/redux). Redux provides its own type definitions, so you don't need @types/redux installed!
+    dependencies:
+      redux: 4.2.1
+    dev: false
 
   /@types/resolve@1.17.1:
     resolution: {integrity: sha512-yy7HuzQhj0dhGpD8RLXSZWEkLsV9ibvxvi6EiJ3bkqLAO1RGo0WbkWQiwpRlSFymTJRz0d3k5LM3kkx8ArDbLw==}

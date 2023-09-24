@@ -112,7 +112,7 @@ function ListCategories() {
                     <Typography variant="h6">{people}</Typography>
                   </Stack>
                   <Box display="flex" justifyContent="center" my={1}>
-                    <Button onClick={() => setViewPopup(true)} variant="contained" sx={{ borderRadius: 20, px: 5 }}>
+                    <Button onClick={() => setViewPopup(true)} variant="contained" sx={{ px: 5 }}>
                       View
                     </Button>
                   </Box>

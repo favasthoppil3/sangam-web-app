@@ -6,8 +6,12 @@ import Box from '@mui/material/Box';
 import styled from 'styled-components';
 import SwipeableViews from 'react-swipeable-views';
 import Category1 from '@/features/Category1/Category1';
-import { AppBar } from '@mui/material';
+import { AppBar, Stack, IconButton } from '@mui/material';
 import { TOP_BAR_HEIGHT, TOP_TAB_HEIGHT } from '@/config/Constants';
+import BallotRoundedIcon from '@mui/icons-material/BallotRounded';
+import ProductList from '@/components/shared/Drawer';
+import { ProductsTypes } from '@/types/ProductCategory';
+import { connect } from 'react-redux'; // Import connect from react-redux
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -51,7 +55,13 @@ function a11yProps(index: number) {
   };
 }
 
-export default function CategoryTabs() {
+function CategoryTabs({
+  products,
+  productListOpen,
+  toggleProduct, // Action to toggle a product
+  updateProductInput, // Action to update product input
+  toggleProductList,
+}: any) {
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
   const tabPanelRefs = React.useRef([]);
@@ -69,11 +79,39 @@ export default function CategoryTabs() {
   const handleChangeIndex = (index: number) => {
     setValue(index);
   };
-  const handleTabPanelRef = (ref, index) => {
+  const handleTabPanelRef = (ref, index: number) => {
     tabPanelRefs.current[index] = ref;
   };
+
+  // const [products, setProducts] = React.useState<ProductsTypes[]>([
+  //   { id: 1, productName: 'Apple', checked: false, inputDisabled: true, inputValue: '' },
+  //   { id: 2, productName: 'Banana', checked: false, inputDisabled: true, inputValue: '' },
+  //   { id: 3, productName: 'Orange', checked: false, inputDisabled: true, inputValue: '' },
+  //   { id: 4, productName: 'Mango', checked: false, inputDisabled: true, inputValue: '' },
+  //   { id: 5, productName: 'Grapes', checked: false, inputDisabled: true, inputValue: '' },
+  //   { id: 6, productName: 'Grapes', checked: false, inputDisabled: true, inputValue: '' },
+  //   { id: 7, productName: 'Grapes', checked: false, inputDisabled: true, inputValue: '' },
+  //   { id: 8, productName: 'Grapes', checked: false, inputDisabled: true, inputValue: '' },
+  //   { id: 9, productName: 'Grapes', checked: false, inputDisabled: true, inputValue: '' },
+  //   { id: 10, productName: 'Grapes', checked: false, inputDisabled: true, inputValue: '' },
+  // ]);
+  // const [productListOpen, setProductListOpen] = React.useState(false);
+  const checkedProducts = products.filter((product) => product.checked);
   return (
     <CategoryRoot>
+      <Stack
+        position="fixed"
+        bottom={60}
+        right={10}
+        zIndex={1}
+        borderRadius={50}
+        bgcolor={theme.palette.common.white}
+        boxShadow={5}
+      >
+        <IconButton color="primary" onClick={() => toggleProductList(true)}>
+          <BallotRoundedIcon sx={{ fontSize: 30 }} />
+        </IconButton>
+      </Stack>
       <AppBar position="fixed" sx={{ boxShadow: 0 }}>
         <Tabs
           className="Category_tab"
@@ -95,7 +133,7 @@ export default function CategoryTabs() {
         onChangeIndex={handleChangeIndex}
       >
         <TabPanel ref={(ref) => handleTabPanelRef(ref, 0)} value={value} index={0} dir={theme.direction}>
-          <Category1 />
+          <Category1 Products1={products} />
         </TabPanel>
         <TabPanel ref={(ref) => handleTabPanelRef(ref, 2)} value={value} index={1} dir={theme.direction}>
           Item Two
@@ -104,6 +142,27 @@ export default function CategoryTabs() {
           Item Three
         </TabPanel>
       </SwipeableViews>
+      <ProductList checkedProducts={checkedProducts} open={productListOpen} onClose={() => toggleProductList(false)} />;
     </CategoryRoot>
   );
 }
+
+const mapStateToProps = (state) => ({
+  products: state.products,
+  productListOpen: state.productListOpen,
+});
+
+// Define Redux actions
+const mapDispatchToProps = (dispatch) => ({
+  toggleProduct: (productId) => {
+    dispatch({ type: 'TOGGLE_PRODUCT', payload: { productId } });
+  },
+  updateProductInput: (productId, productCount) => {
+    dispatch({ type: 'UPDATE_PRODUCT_INPUT', payload: { productId, productCount } });
+  },
+  toggleProductList: (open) => {
+    dispatch({ type: 'TOGGLE_PRODUCT_LIST', payload: { open } });
+  },
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(CategoryTabs);

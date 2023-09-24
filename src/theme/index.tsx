@@ -19,7 +19,7 @@ export default function ThemeProvider({ children }: ThemeProviderProps) {
     () => ({
       palette: isLight ? palette.light : palette.dark,
       typography,
-      shape: { borderRadius: 5 },
+      shape: { borderRadius: 10 },
       shadows: isLight ? shadows.light : shadows.dark,
       customShadows: isLight ? customShadows.light : customShadows.dark,
       spacing: 6,

@@ -6,7 +6,7 @@ import StyledThemeProvider from '@/providers/StyledThemeProvider';
 import { HelmetProvider } from 'react-helmet-async';
 import { Provider as ReduxProvider } from 'react-redux';
 import { SettingsProvider } from '@/contexts/SettingsContext';
-import { store } from '@/store';
+import store from '@/store';
 import ConfirmationDialogProider from '@/components/shared/Confirmation';
 
 export type AppProviderProps = {

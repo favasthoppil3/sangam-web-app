@@ -5,7 +5,8 @@ export default function Button(theme: Theme): Components<Theme> {
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: 20,
+          // borderRadius: Number(theme.shape.borderRadius) * 2,
+          // borderRadius: 10,
           '&:hover': {
             boxShadow: 'none',
           },
@@ -22,7 +23,7 @@ export default function Button(theme: Theme): Components<Theme> {
           },
         },
         containedPrimary: {
-          borderRadius: 20,
+          // borderRadius: 10,
           boxShadow: 'none',
           '&:hover': {
             boxShadow: theme.customShadows.primary,

@@ -80,7 +80,7 @@ export default function Input(theme: Theme): Components<Theme> {
           },
         },
         input: {
-          padding: '0.45rem 0.875rem',
+          padding: '0.75rem 0.875rem',
         },
         inputSizeSmall: {
           padding: '0.5rem 0.875rem',

@@ -21,6 +21,7 @@ import { ProductsTypes } from '@/types/ProductCategory';
 import TodayOutlinedIcon from '@mui/icons-material/TodayOutlined';
 import emptyBox from '@/assets/empty-box.png';
 import styled from 'styled-components';
+import PersonOutlineRoundedIcon from '@mui/icons-material/PersonOutlineRounded';
 import DeleteOutlineRoundedIcon from '@mui/icons-material/DeleteOutlineRounded';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import CurrentDate from './DatePicker';
@@ -33,7 +34,11 @@ type DrawerProps = {
   inputValue?: number;
 };
 
+const DrawerRoot = styled(Box)``;
 const ProductListRoot = styled(Box)`
+  background-color: ${(props) =>
+    props.theme.themeMode === 'light' ? props.theme.palette.grey[200] : props.theme.palette.grey[800]};
+
   width: 100%;
   height: calc(100vh - 10.45rem);
   overflow: auto;
@@ -55,52 +60,61 @@ export default function ProductList({ open, checkedProducts, inputValue, onClose
   }, []);
 
   return (
-    <div>
+    <DrawerRoot>
       <Drawer anchor="right" open={open}>
         <Box sx={{ width: '100vw', height: '100%' }} role="presentation">
-          <Stack pt={2} px={2} direction="row" display="flex" alignItems="center" justifyContent="space-between">
+          <Box >
+            <Stack pt={2} px={2} direction="row" display="flex" alignItems="center" justifyContent="space-between">
+              {checkedProducts.length !== 0 && (
+                <Stack direction="row" alignItems="center" sx={{ color: theme.palette.grey[600] }} gap={1}>
+                  <TodayOutlinedIcon />
+                  <Typography variant="subtitle2">
+                    {currentDate}&nbsp;-&nbsp;{currentDayOfWeek}
+                  </Typography>
+                  {/* <CurrentDate /> */}
+                </Stack>
+              )}
+              <Box display="flex" flex={1} justifyContent="end">
+                <Stack>
+                  <IconButton
+                    aria-label="close"
+                    onClick={onClose}
+                    sx={{
+                      p: 1,
+                      color: theme.palette.grey[500],
+                      '&:hover': {
+                        transition: '100ms',
+                        transform: 'scale(1.1)',
+                      },
+                    }}
+                  >
+                    <CloseIcon />
+                  </IconButton>
+                </Stack>
+              </Box>
+            </Stack>
             {checkedProducts.length !== 0 && (
-              <Stack direction="row" alignItems="center" sx={{ color: theme.palette.grey[600] }} gap={1}>
-                <TodayOutlinedIcon />
-                <Typography variant="subtitle2">
-                  {currentDate}&nbsp;-&nbsp;{currentDayOfWeek}
-                </Typography>
-                {/* <CurrentDate /> */}
+              <Stack
+                my={2}
+                px={2}
+                flexDirection="row"
+                alignItems="center"
+                sx={{ color: theme.palette.grey[600] }}
+                gap={1}
+              >
+                <PersonOutlineRoundedIcon />
+                <FormControl fullWidth>
+                  <TextField
+                    variant="standard"
+                    type="text"
+                    placeholder="Enter Name"
+                    fullWidth
+                    sx={{ fontFamily: 'Poppins Regular' }}
+                  />
+                </FormControl>
               </Stack>
             )}
-            <Box display="flex" flex={1} justifyContent="end">
-              <Stack>
-                <IconButton
-                  aria-label="close"
-                  onClick={onClose}
-                  sx={{
-                    p: 1,
-                    color: theme.palette.grey[500],
-                    '&:hover': {
-                      transition: '100ms',
-                      transform: 'scale(1.1)',
-                    },
-                  }}
-                >
-                  <CloseIcon />
-                </IconButton>
-              </Stack>
-            </Box>
-          </Stack>
-          {checkedProducts.length !== 0 && (
-            <Stack my={2} px={2}>
-              <FormControl>
-                <TextField
-                  variant="standard"
-                  type="text"
-                  placeholder="Enter Name"
-                  fullWidth
-                  sx={{ fontFamily: 'Poppins Regular' }}
-                />
-              </FormControl>
-            </Stack>
-          )}
-
+          </Box>
           <ProductListRoot>
             {checkedProducts.length === 0 && (
               <Box width="100%" height="100%" display="flex" alignItems="center" justifyContent="center">
@@ -115,10 +129,12 @@ export default function ProductList({ open, checkedProducts, inputValue, onClose
               <Grid container spacing={1} mt={1} mb={2}>
                 {checkedProducts.map((product) => (
                   <Grid item lg={3} xs={12} key={product.id}>
-                    <Card sx={{ boxShadow: 5, p: 2, mx: 2 }}>
+                    <Card sx={{ p: 2, mx: 2 }}>
                       <Box display="flex" justifyContent="space-between" alignItems="center">
                         <Stack display="flex" sx={{ flexWrap: 'nowrap' }}>
-                          <Typography variant="subtitle2">{product.productName}</Typography>
+                          <Typography variant="subtitle2" fontSize={18}>
+                            {product.productName}
+                          </Typography>
                         </Stack>
                         <Stack flexDirection="row" alignItems="center" gap={5}>
                           {product.inputValue === '' ? (
@@ -139,7 +155,12 @@ export default function ProductList({ open, checkedProducts, inputValue, onClose
                               px={2}
                               borderRadius={1}
                               variant="subtitle2"
-                              sx={{ color: product.inputValue === '0' ? theme.palette.error.light : '' }}
+                              sx={{
+                                color:
+                                  product.inputValue === '0' ? theme.palette.error.light : theme.palette.common.black,
+                                borderColor:
+                                  product.inputValue === '0' ? theme.palette.error.light : theme.palette.primary.main,
+                              }}
                             >
                               {product.inputValue}
                             </Typography>
@@ -167,6 +188,6 @@ export default function ProductList({ open, checkedProducts, inputValue, onClose
           )}
         </Box>
       </Drawer>
-    </div>
+    </DrawerRoot>
   );
 }

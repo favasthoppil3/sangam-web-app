@@ -19,7 +19,6 @@ import TodayOutlinedIcon from '@mui/icons-material/TodayOutlined';
 import DeleteOutlineRoundedIcon from '@mui/icons-material/DeleteOutlineRounded';
 import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
 import styled from 'styled-components';
-import { DeleteMessage } from '@/components/shared/DeleteMessage';
 import DeleteBox from '@/components/shared/DeleteBox';
 import ViewBox from '@/components/shared/ViwBox';
 import { TOP_BAR_HEIGHT } from '@/config/Constants';
@@ -28,15 +27,15 @@ const ListPeople = [
   'Siri',
   'Alexa',
   'Apple',
-  'Orenga',
+  'Orenge',
   'Siri',
   'Alexa',
   'Apple',
-  'Orenga',
+  'Orenge',
   'Siri',
   'Alexa',
   'Apple',
-  'Orenga',
+  'Orenge',
 ];
 
 const ListCategoriesRoot = styled.div`
@@ -98,7 +97,9 @@ function ListCategories() {
                   <Stack flexDirection="row" justifyContent="space-between" alignItems="center">
                     <Stack direction="row" alignItems="center" sx={{ color: theme.palette.grey[600] }} gap={1}>
                       <TodayOutlinedIcon />
-                      <Typography variant="subtitle2">12.02.2023&nbsp;-&nbsp;Friday</Typography>
+                      <Typography variant="subtitle2" fontSize={16}>
+                        12.02.2023&nbsp;-&nbsp;Friday
+                      </Typography>
                     </Stack>
                     <IconButton onClick={handleDeletePopupOpen}>
                       <DeleteOutlineRoundedIcon sx={{ color: theme.palette.error.main }} />
@@ -106,7 +107,9 @@ function ListCategories() {
                   </Stack>
                   <Stack direction="row" alignItems="center" sx={{ color: theme.palette.grey[600] }} gap={1}>
                     <PlaceOutlinedIcon />
-                    <Typography variant="subtitle2">Thenkara</Typography>
+                    <Typography variant="subtitle2" fontSize={16}>
+                      Thenkara
+                    </Typography>
                   </Stack>
                   <Stack mt={3} ml={1}>
                     <Typography variant="h6">{people}</Typography>

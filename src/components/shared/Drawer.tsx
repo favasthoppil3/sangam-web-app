@@ -53,7 +53,7 @@ const ProductListRoot = styled(Box)`
   background-color: ${(props) =>
     props.theme.themeMode === 'light' ? props.theme.palette.grey[200] : props.theme.palette.grey[900]};
   width: 100%;
-  height: calc(100vh - 10.3rem);
+  height: calc(100vh - 11.3rem);
   overflow: auto;
   /* .MuiCard-root {
     opacity: 1;
@@ -98,8 +98,8 @@ export default function ProductList({ open, checkedProducts, onClose }: DrawerPr
             <Stack pt={2} px={2} direction="row" display="flex" alignItems="center" justifyContent="space-between">
               {checkedProducts.length !== 0 && (
                 <Stack direction="row" alignItems="center" sx={{ color: theme.palette.grey[600] }} gap={1}>
-                  <TodayOutlinedIcon fontSize="small" />
-                  <Typography variant="subtitle2">
+                  <TodayOutlinedIcon fontSize="medium" />
+                  <Typography variant="subtitle2" fontSize={16}>
                     {currentDate}&nbsp;-&nbsp;{currentDayOfWeek}
                   </Typography>
                   {/* <CurrentDate /> */}
@@ -133,7 +133,7 @@ export default function ProductList({ open, checkedProducts, onClose }: DrawerPr
                 sx={{ color: theme.palette.grey[600] }}
                 gap={1}
               >
-                <PersonOutlineOutlinedIcon fontSize="medium" />
+                <PersonOutlineOutlinedIcon fontSize="large" />
                 <FormControl fullWidth>
                   <TextField
                     variant="standard"
@@ -155,8 +155,8 @@ export default function ProductList({ open, checkedProducts, onClose }: DrawerPr
               justifyContent="center"
             >
               <Stack flexDirection="column" alignItems="center">
-                <img src={emptyBox} width={100} alt="" />
-                <Typography variant="subtitle2">No data found.</Typography>
+                <img src={emptyBox} width={150} alt="" />
+                <Typography variant="subtitle2" fontSize={16}>No data found.</Typography>
               </Stack>
             </Box>
           )}
@@ -214,11 +214,17 @@ export default function ProductList({ open, checkedProducts, onClose }: DrawerPr
           )}
 
           {checkedProducts.length !== 0 && (
-            <Box width="100%" display="flex" gap={2} py={2} px={2}>
-              <Button fullWidth onClick={onClose} variant="contained" color="secondary">
+            <Box width="100%" sx={{ display: 'flex', justifyContent: 'end' }} gap={2} py={2} px={2}>
+              <Button
+                onClick={onClose}
+                variant="contained"
+                sx={{ width: { xs: '100%', md: '10%' } }}
+                size="large"
+                color="secondary"
+              >
                 Cancel
               </Button>
-              <Button fullWidth variant="contained" color="primary">
+              <Button variant="contained" size="large" color="primary" sx={{ width: { xs: '100%', md: '10%' } }}>
                 Save
               </Button>
             </Box>

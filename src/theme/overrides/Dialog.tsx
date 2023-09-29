@@ -13,7 +13,7 @@ export default function Dialog(theme: Theme): Components<Theme> {
             borderRadius: 0,
           },
           '&.MuiDialog-paper .MuiDialogActions-root': {
-            padding: theme.spacing(0, 3, 3, 0),
+            padding: theme.spacing(0, 3, 3, 3),
           },
           '@media (max-width: 600px)': {
             margin: theme.spacing(2),

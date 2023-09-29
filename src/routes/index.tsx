@@ -8,13 +8,13 @@ const Home = Loadable(lazy(() => import('@/pages/Home')));
 function Routes() {
   const routes = useRoutes([
     {
-      path: '/',
-      element: <StartingPage />,
-    },
-    {
       path: '/home',
       element: <Home />,
     },
+    // {
+    //   path: '/home',
+    //   element: <Home />,
+    // },
     // {
     //   path: '/',
     //   element: (

@@ -67,10 +67,10 @@ export default function DeleteBox({ popup, handleClickClose }: PopupProps) {
           <DeleteMessage message="Are you sure want to Delete?" />
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={handleClickClose} variant="contained" color="secondary">
+          <Button fullWidth onClick={handleClickClose} variant="contained" color="secondary">
             Cancel
           </Button>
-          <Button variant="contained" color="error" autoFocus onClick={() => {}}>
+          <Button fullWidth variant="contained" color="error" onClick={() => {}}>
             Ok
           </Button>
         </DialogActions>

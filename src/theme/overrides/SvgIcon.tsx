@@ -7,6 +7,11 @@ export default function SvgIcon() {
           height: 20,
           fontSize: 'inherit',
         },
+        fontSizeMedium: {
+          width: 28,
+          height: 28,
+          fontSize: 'inherit',
+        },
         fontSizeLarge: {
           width: 32,
           height: 32,

@@ -63,7 +63,7 @@ export const productSlice = createSlice({
         state.productListData.error = null;
       })
       .addCase(fetchProductsList.fulfilled, (state, action) => {
-        const { data } = action.payload;
+        const data = action.payload;
         state.productListData.status = 'success';
         state.productListData.data = data;
       })

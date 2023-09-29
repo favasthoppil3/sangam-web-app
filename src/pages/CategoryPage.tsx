@@ -145,7 +145,7 @@ export default function CategoryTabs() {
         boxShadow={5}
       >
         <IconButton color="primary" onClick={handleDrawerToggle}>
-          <BallotRoundedIcon className="List_icon" sx={{ fontSize: 30 }} />
+          <BallotRoundedIcon className="List_icon" fontSize="large" />
         </IconButton>
       </Stack>
       <AppBar position="fixed" sx={{ boxShadow: 0 }}>

@@ -18,7 +18,7 @@ const FooterTabRoot = styled(Box)`
       props.theme.themeMode === 'light' ? props.theme.palette.common.white : props.theme.palette.grey[800]};
   }
   .tab-panel {
-    /* margin-top: ${TOP_BAR_HEIGHT}; */    
+    /* margin-top: ${TOP_BAR_HEIGHT}; */
   }
 `;
 interface TabPanelProps {

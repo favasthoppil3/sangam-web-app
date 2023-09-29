@@ -2,13 +2,13 @@ import { lazy } from 'react';
 import { useRoutes } from 'react-router-dom';
 import Loadable from '@/components/shared/Loadable';
 
-const StartingPage = Loadable(lazy(() => import('@/pages/StartingPage')));
+// const StartingPage = Loadable(lazy(() => import('@/pages/StartingPage')));
 const Home = Loadable(lazy(() => import('@/pages/Home')));
 
 function Routes() {
   const routes = useRoutes([
     {
-      path: '/home',
+      path: '/',
       element: <Home />,
     },
     // {

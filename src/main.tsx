@@ -4,6 +4,6 @@ import App from './App';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 
-startMockServer();
+// startMockServer();
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(<App />);

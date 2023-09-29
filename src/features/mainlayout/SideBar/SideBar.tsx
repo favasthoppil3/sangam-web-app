@@ -2,7 +2,7 @@ import { breakPoints } from '@/config/breakpoints';
 import { SIDE_BAR_WIDTH, TOP_BAR_HEIGHT } from '@/config/constants';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { useAppSelector } from '@/hooks/useAppSelector';
-import { getSideBarState, toggleSidebar } from '@/store/layout.slice';
+import { getSideBarState, toggleSidebar } from '@/store/drawer.slice';
 import { Drawer } from '@mui/material';
 import { ReactNode } from 'react';
 import styled from 'styled-components';

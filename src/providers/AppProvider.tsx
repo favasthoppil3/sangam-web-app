@@ -1,12 +1,11 @@
 import { ReactNode } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { AuthProvider } from '@/contexts/AuthContext';
 import ThemeProvider from '@/theme';
 import StyledThemeProvider from '@/providers/StyledThemeProvider';
 import { HelmetProvider } from 'react-helmet-async';
 import { Provider as ReduxProvider } from 'react-redux';
 import { SettingsProvider } from '@/contexts/SettingsContext';
-import store from '@/store';
+import { store } from '@/store';
 import ConfirmationDialogProider from '@/components/shared/Confirmation';
 
 export type AppProviderProps = {
@@ -21,9 +20,9 @@ function AppProvider({ children }: AppProviderProps) {
           <StyledThemeProvider>
             <ConfirmationDialogProider>
               <HelmetProvider>
-                <AuthProvider>
-                  <Router>{children}</Router>
-                </AuthProvider>
+                {/* <AuthProvider> */}
+                <Router>{children}</Router>
+                {/* </AuthProvider> */}
               </HelmetProvider>
             </ConfirmationDialogProider>
           </StyledThemeProvider>

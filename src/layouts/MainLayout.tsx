@@ -5,7 +5,7 @@ import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 import { breakPoints } from '@/config/breakpoints';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
-import { toggleSidebar } from '@/store/layout.slice';
+import { toggleSidebar } from '@/store/drawer.slice';
 import TreeMenu from '@/features/mainlayout/SideBar/TreeMenu';
 import { useCallback } from 'react';
 import { TreeMenuItem } from '@/types/Layout';

@@ -1,8 +1,7 @@
 /* eslint-disable no-useless-catch */
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { Api, APIError, APIResponse, ErrorDescripion } from '@/api/base/types';
-import ApiUrls, { AnonymousUrls } from '@/config/apiUrls';
-import { TokenStoragekey } from '@/config/constants';
+import ApiUrls from '@/config/ApiUrls';
 
 export class ApiResponseError extends Error {
   public response: APIError;
@@ -20,25 +19,6 @@ const apiClient = axios.create({
     'Content-Type': 'application/json',
   },
 });
-
-apiClient.interceptors.request.use(
-  (config) => {
-    if (config.url) {
-      const url = config.url.toLowerCase();
-      if (!AnonymousUrls.some((x) => url.startsWith(x.toLowerCase()))) {
-        const token = localStorage.getItem(TokenStoragekey);
-        const { headers } = config;
-        if (token) {
-          headers.Authorization = `Bearer ${token}`;
-        }
-      }
-    }
-    return config;
-  },
-  (error) => {
-    Promise.reject(error);
-  }
-);
 
 apiClient.interceptors.response.use(
   (response) => response,

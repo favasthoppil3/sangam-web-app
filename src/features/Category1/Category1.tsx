@@ -8,19 +8,24 @@ import {
   Grid,
   IconButton,
   OutlinedInput,
+  Skeleton,
   Stack,
   TextField,
   Typography,
 } from '@mui/material';
-import React, { useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import styled, { css } from 'styled-components';
-import ProductList from '@/components/shared/Drawer';
-import { ProductsTypes } from '@/types/ProductCategory';
-import { connect } from 'react-redux'; // Import connect from react-redux
+import {
+  getProductsList,
+  getProductsListStatus,
+  setCheckedProducts,
+  setInputValues,
+} from '@/store/Product/product.slice';
+import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { useAppSelector } from '@/hooks/useAppSelector';
 
 const Category1Root = styled(Box)`
   margin-top: calc(${TOP_TAB_HEIGHT} + ${TOP_BAR_HEIGHT});
-  /* height: calc(100vh - (${TOP_BAR_HEIGHT} + ${TOP_TAB_HEIGHT} + 6.25rem)); */
 `;
 
 interface ProductNameProps {
@@ -52,30 +57,21 @@ const ProductName = styled(Typography)<ProductNameProps>`
 //     `}
 // `;
 
-function Category1({
-  products,
-  toggleProduct, // Action to toggle a product
-  updateProductInput, // Action to update product input
-  toggleProductList,
-}: any) {
+export default function Category1() {
+  const dispatch = useAppDispatch();
+  const productsList = useAppSelector(getProductsList);
+
   const handleCheckboxChange = (productId: number) => {
-    toggleProduct(productId); // Dispatch the toggleProduct action
+    dispatch(setCheckedProducts(productId));
   };
 
   const handleInputChange = (productId: number, productCount: string) => {
     if (/^\d{0,4}$/.test(productCount)) {
-      updateProductInput(productId, productCount); // Dispatch the updateProductInput action
+      dispatch(setInputValues({ productId, productCount }));
     }
+    // updateProductInput(productId, productCount); // Dispatch the updateProductInput action
   };
-  // const handleCheckboxChange = (productId: number) => {
-  //   setProducts((prevProducts) =>
-  //     prevProducts.map((product) =>
-  //       product.id === productId
-  //         ? { ...product, checked: !product.checked, inputDisabled: !product.inputDisabled }
-  //         : product
-  //     )
-  //   );
-  // };
+
   // const handleInputChange = (productId: number, productCount: string) => {
   //   if (/^\d{0,4}$/.test(productCount)) {
   //     setProducts((prevProducts) =>
@@ -83,59 +79,76 @@ function Category1({
   //     );
   //   }
   // };
+  const productsListStatus = useAppSelector(getProductsListStatus);
+  let BodyContent: ReactNode = null;
 
+  if (productsListStatus === 'loading') {
+    BodyContent = Array.from({ length: 4 }).map((_, index) => (
+      <Grid item lg={3} xs={12} key={index}>
+        <Card sx={{ boxShadow: 0, p: 2 }}>
+          <Skeleton variant="text" height={30} />
+          <Skeleton variant="text" height={30} />
+          <Skeleton variant="text" height={30} />
+        </Card>
+      </Grid>
+    ));
+  }
+
+  if (productsListStatus === 'success') {
+    BodyContent = productsList.map((item) => (
+      <Grid item lg={3} xs={12} key={item.id}>
+        <Card sx={{ boxShadow: 0, p: 2 }}>
+          <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Stack display="flex" sx={{ flexWrap: 'nowrap' }}>
+              <ProductName variant="subtitle2" fontSize={18} checked={item.checked}>
+                {item.productName}
+              </ProductName>
+            </Stack>
+            <Stack flexDirection="row" alignItems="center" gap={3}>
+              <FormControl>
+                <OutlinedInput
+                  disabled={item.inputDisabled}
+                  type="number"
+                  sx={{ fontFamily: 'Poppins Regular', maxWidth: 65, height: 30 }}
+                  id={`outlined-adornment-amount-${item.id}`}
+                  value={item.inputValue || ''}
+                  onChange={(event) => handleInputChange(item.id, event.target.value)}
+                  inputProps={{ maxLength: 4 }}
+                />
+              </FormControl>
+              <Checkbox size="medium" checked={item.checked} onChange={() => handleCheckboxChange(item.id)} />
+            </Stack>
+          </Box>
+        </Card>
+      </Grid>
+    ));
+  }
   return (
     <Category1Root>
-      <Grid container spacing={1} mb={8}>
-        {products.map((item) => (
-          <Grid item lg={3} xs={12} key={item.id}>
-            <Card sx={{ boxShadow: 0, p: 2 }}>
-              <Box display="flex" justifyContent="space-between" alignItems="center">
-                <Stack display="flex" sx={{ flexWrap: 'nowrap' }}>
-                  <ProductName variant="subtitle2" fontSize={18} checked={item.checked}>
-                    {item.productName}
-                  </ProductName>
-                </Stack>
-                <Stack flexDirection="row" alignItems="center" gap={3}>
-                  <FormControl>
-                    <OutlinedInput
-                      disabled={item.inputDisabled}
-                      type="number"
-                      sx={{ fontFamily: 'Poppins Regular', maxWidth: 65, height: 30 }}
-                      id={`outlined-adornment-amount-${item.id}`}
-                      value={item.inputValue || ''}
-                      onChange={(e) => handleInputChange(item.id, e.target.value)}
-                      inputProps={{ maxLength: 4 }}
-                    />
-                  </FormControl>
-                  <Checkbox size="medium" checked={item.checked} onChange={() => handleCheckboxChange(item.id)} />
-                </Stack>
-              </Box>
-            </Card>
-          </Grid>
-        ))}
+      <Grid container spacing={1} mb={12}>
+        {BodyContent}
       </Grid>
     </Category1Root>
   );
 }
 
-// Map Redux state to component props
-const mapStateToProps = (state) => ({
-  products: state.products,
-  productListOpen: state.productListOpen,
-});
+// // Map Redux state to component props
+// const mapStateToProps = (state) => ({
+//   products: state.products,
+//   productListOpen: state.productListOpen,
+// });
 
-// Define Redux actions
-const mapDispatchToProps = (dispatch) => ({
-  toggleProduct: (productId) => {
-    dispatch({ type: 'TOGGLE_PRODUCT', payload: { productId } });
-  },
-  updateProductInput: (productId, productCount) => {
-    dispatch({ type: 'UPDATE_PRODUCT_INPUT', payload: { productId, productCount } });
-  },
-  toggleProductList: (open) => {
-    dispatch({ type: 'TOGGLE_PRODUCT_LIST', payload: { open } });
-  },
-});
+// // Define Redux actions
+// const mapDispatchToProps = (dispatch) => ({
+//   toggleProduct: (productId) => {
+//     dispatch({ type: 'TOGGLE_PRODUCT', payload: { productId } });
+//   },
+//   updateProductInput: (productId, productCount) => {
+//     dispatch({ type: 'UPDATE_PRODUCT_INPUT', payload: { productId, productCount } });
+//   },
+//   toggleProductList: (open) => {
+//     dispatch({ type: 'TOGGLE_PRODUCT_LIST', payload: { open } });
+//   },
+// });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Category1);
+// export default connect(mapStateToProps, mapDispatchToProps)(Category1);

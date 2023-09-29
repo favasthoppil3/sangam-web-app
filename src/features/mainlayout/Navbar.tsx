@@ -15,17 +15,16 @@ export default function Navbar() {
     <NavbarRoot sx={{ flexGrow: 1 }}>
       <AppBar
         position="fixed"
-        sx={{ boxShadow: 0, backgroundColor: theme.palette.primary.main, height: TOP_BAR_HEIGHT }}
+        sx={{
+          boxShadow: 0,
+          backgroundColor: theme.palette.primary.main,
+          height: TOP_BAR_HEIGHT,
+        }}
       >
-        <Toolbar
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-          }}
-        >
+        <Toolbar sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Stack>
             <Typography sx={{ fontFamily: 'Poppins Regular' }} variant="h6">
-              {/* Sangam */}
+              Sangam
             </Typography>
           </Stack>
 

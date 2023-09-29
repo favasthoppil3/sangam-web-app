@@ -12,6 +12,12 @@ import BallotRoundedIcon from '@mui/icons-material/BallotRounded';
 import ProductList from '@/components/shared/Drawer';
 import { ProductsTypes } from '@/types/ProductCategory';
 import { connect } from 'react-redux'; // Import connect from react-redux
+import { useAppSelector } from '@/hooks/useAppSelector';
+import { getDrawerState, toggleDrawer } from '@/store/drawer.slice';
+import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { getCheckedProducts, getProductsList, getProductsListStatus } from '@/store/Product/product.slice';
+import { fetchProductsList } from '@/store/Product/product.thunks';
+import { request } from 'http';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -23,6 +29,14 @@ const CategoryRoot = styled(Box)`
   background-color: ${(props) =>
     props.theme.themeMode === 'light' ? props.theme.palette.grey[200] : props.theme.palette.grey[900]};
   min-height: 100vh;
+  .product_list_button {
+    background-color: ${(props) =>
+      props.theme.themeMode === 'light' ? props.theme.palette.primary.main : props.theme.palette.primary.main};
+    .List_icon {
+      color: ${(props) =>
+        props.theme.themeMode === 'light' ? props.theme.palette.common.white : props.theme.palette.grey[900]};
+    }
+  }
   .Category_tab {
   }
   .MuiAppBar-root {
@@ -55,16 +69,34 @@ function a11yProps(index: number) {
   };
 }
 
-function CategoryTabs({
-  products,
-  productListOpen,
-  toggleProduct, // Action to toggle a product
-  updateProductInput, // Action to update product input
-  toggleProductList,
-}: any) {
+export default function CategoryTabs() {
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
   const tabPanelRefs = React.useRef([]);
+
+  const sideDrawerOpen = useAppSelector(getDrawerState);
+  const productsList = useAppSelector(getProductsList);
+  const productsListStatus = useAppSelector(getProductsListStatus);
+  const checkedProducts = useAppSelector(getCheckedProducts);
+
+  const currentClassListRequest = React.useMemo(() => ({}), []);
+
+  const dispatch = useAppDispatch();
+
+  const loadProductList = React.useCallback(() => {
+    dispatch(fetchProductsList);
+  }, [dispatch]);
+
+  React.useEffect(() => {
+    if (productsListStatus === 'idle') {
+      loadProductList();
+    }
+    // console.log('datass::', classListData);
+  }, [loadProductList]);
+
+  const handleDrawerToggle = () => {
+    dispatch(toggleDrawer());
+  };
 
   React.useEffect(() => {
     const tabPanelElement = document.getElementById(`tabpanel-${value}`);
@@ -75,6 +107,10 @@ function CategoryTabs({
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+
+  React.useEffect(() => {
+    console.log('productsList', productsList);
+  }, [productsList]);
 
   const handleChangeIndex = (index: number) => {
     setValue(index);
@@ -95,21 +131,21 @@ function CategoryTabs({
   //   { id: 9, productName: 'Grapes', checked: false, inputDisabled: true, inputValue: '' },
   //   { id: 10, productName: 'Grapes', checked: false, inputDisabled: true, inputValue: '' },
   // ]);
-  // const [productListOpen, setProductListOpen] = React.useState(false);
-  const checkedProducts = products.filter((product) => product.checked);
+
+  // const checkedProducts = productsList.filter((product) => product.checked);
   return (
     <CategoryRoot>
       <Stack
+        className="product_list_button"
         position="fixed"
         bottom={60}
         right={10}
         zIndex={1}
         borderRadius={50}
-        bgcolor={theme.palette.common.white}
         boxShadow={5}
       >
-        <IconButton color="primary" onClick={() => toggleProductList(true)}>
-          <BallotRoundedIcon sx={{ fontSize: 30 }} />
+        <IconButton color="primary" onClick={handleDrawerToggle}>
+          <BallotRoundedIcon className="List_icon" sx={{ fontSize: 30 }} />
         </IconButton>
       </Stack>
       <AppBar position="fixed" sx={{ boxShadow: 0 }}>
@@ -133,7 +169,7 @@ function CategoryTabs({
         onChangeIndex={handleChangeIndex}
       >
         <TabPanel ref={(ref) => handleTabPanelRef(ref, 0)} value={value} index={0} dir={theme.direction}>
-          <Category1 Products1={products} />
+          <Category1 />
         </TabPanel>
         <TabPanel ref={(ref) => handleTabPanelRef(ref, 2)} value={value} index={1} dir={theme.direction}>
           Item Two
@@ -142,27 +178,27 @@ function CategoryTabs({
           Item Three
         </TabPanel>
       </SwipeableViews>
-      <ProductList checkedProducts={checkedProducts} open={productListOpen} onClose={() => toggleProductList(false)} />;
+      <ProductList checkedProducts={checkedProducts} open={sideDrawerOpen} onClose={handleDrawerToggle} />;
     </CategoryRoot>
   );
 }
 
-const mapStateToProps = (state) => ({
-  products: state.products,
-  productListOpen: state.productListOpen,
-});
+// const mapStateToProps = (state) => ({
+//   products: state.products,
+//   productListOpen: state.productListOpen,
+// });
 
-// Define Redux actions
-const mapDispatchToProps = (dispatch) => ({
-  toggleProduct: (productId) => {
-    dispatch({ type: 'TOGGLE_PRODUCT', payload: { productId } });
-  },
-  updateProductInput: (productId, productCount) => {
-    dispatch({ type: 'UPDATE_PRODUCT_INPUT', payload: { productId, productCount } });
-  },
-  toggleProductList: (open) => {
-    dispatch({ type: 'TOGGLE_PRODUCT_LIST', payload: { open } });
-  },
-});
+// // Define Redux actions
+// const mapDispatchToProps = (dispatch) => ({
+//   toggleProduct: (productId) => {
+//     dispatch({ type: 'TOGGLE_PRODUCT', payload: { productId } });
+//   },
+//   updateProductInput: (productId, productCount) => {
+//     dispatch({ type: 'UPDATE_PRODUCT_INPUT', payload: { productId, productCount } });
+//   },
+//   toggleProductList: (open) => {
+//     dispatch({ type: 'TOGGLE_PRODUCT_LIST', payload: { open } });
+//   },
+// });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CategoryTabs);
+// export default connect(mapStateToProps, mapDispatchToProps)(CategoryTabs);

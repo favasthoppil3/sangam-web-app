@@ -31,6 +31,6 @@ export const defaultSettings = {
   themeColorPresets: 'orange',
 };
 
-export const TOP_BAR_HEIGHT = '4rem';
+export const TOP_BAR_HEIGHT = '63px';
 export const TOP_TAB_HEIGHT = '3rem';
 export const SIDE_BAR_WIDTH = '15.625rem';

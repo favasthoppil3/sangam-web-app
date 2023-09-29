@@ -8,8 +8,8 @@ import { createContext, ReactNode, Reducer, useCallback, useEffect, useMemo, use
 
 const initialState: AuthContextState = {
   method: 'custom',
-  isAuthenticated: false,
-  isInitialized: false,
+  isAuthenticated: true,
+  isInitialized: true,
   loading: false,
   error: null,
   user: null,

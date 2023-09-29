@@ -7,7 +7,7 @@ import SettingsButton from '@/features/mainlayout/DarkMode';
 import { Button, IconButton } from '@mui/material';
 import { breakPoints } from '@/config/breakpoints';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
-import { toggleSidebar } from '@/store/layout.slice';
+import { toggleSidebar } from '@/store/drawer.slice';
 import { AiOutlineMenu } from 'react-icons/ai';
 
 const TopBarRoot = styled.nav`

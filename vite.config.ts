@@ -16,12 +16,12 @@ export default defineConfig({
     VitePWA({
       manifest: {
         name: 'sangam',
-        short_name: 'Sangam Events',
+        short_name: 'Sangam',
         description: 'Powered by Favas Thoppil',
         icons: [
           {
             src: '/sangam-logo.png',
-            sizes: '192x192',
+            sizes: '512x512',
             type: 'image/png',
             purpose: 'any maskable',
           },

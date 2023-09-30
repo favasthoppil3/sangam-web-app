@@ -15,12 +15,21 @@ export default defineConfig({
     react(),
     VitePWA({
       manifest: {
+        name: 'Sangam Events',
+        short_name: 'sangam',
+        description: 'Powered by Favas Thoppil',
         icons: [
+          {
+            src: '/sangam-logo.png',
+            sizes: '192x192',
+            type: 'image/png',
+            purpose: 'any',
+          },
           {
             src: '/sangam-logo.png',
             sizes: '512x512',
             type: 'image/png',
-            purpose: 'any maskable',
+            purpose: 'maskable',
           },
         ],
       },

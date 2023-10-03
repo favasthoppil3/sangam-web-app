@@ -20,8 +20,14 @@ export default defineConfig({
         description: 'Powered by Favas Thoppil',
         icons: [
           {
-            src: '/sangam-logo.png',
+            src: '/sangam-logo-1.png',
             sizes: '192x192',
+            type: 'image/png',
+            purpose: 'maskable',
+          },
+          {
+            src: '/sangam-logo.png',
+            sizes: '512x512',
             type: 'image/png',
             purpose: 'maskable',
           },

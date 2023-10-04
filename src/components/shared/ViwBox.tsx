@@ -24,16 +24,18 @@ const Transition = React.forwardRef(function Transition(
 export type PopupProps = {
   popup: boolean;
   handleClickClose: () => void;
+  products: any;
+  userName: string;
 };
 
-export default function ViewBox({ popup, handleClickClose }: PopupProps) {
+export default function ViewBox({ popup, handleClickClose, products, userName }: PopupProps) {
   return (
     <div>
-      <Dialog fullScreen w open={popup} onClose={handleClickClose} TransitionComponent={Transition}>
+      <Dialog fullScreen open={popup} onClose={handleClickClose} TransitionComponent={Transition}>
         <AppBar sx={{ position: 'relative' }}>
           <Toolbar>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              Name
+              {userName}
             </Typography>
             <IconButton edge="start" color="inherit" onClick={handleClickClose} aria-label="close">
               <CloseIcon />
@@ -45,13 +47,13 @@ export default function ViewBox({ popup, handleClickClose }: PopupProps) {
           </Toolbar>
         </AppBar>
         <List>
-          {/* <ListItem button>
-            <ListItemText primary="Phone ringtone" secondary="Titania" />
-          </ListItem>
-          <Divider />
-          <ListItem button>
-            <ListItemText primary="Default notification ringtone" secondary="Tethys" />
-          </ListItem> */}
+          {products.map((item) => {
+            return (
+              <ListItem>
+                <ListItemText primary={item.productName} secondary={item.inputValue} />
+              </ListItem>
+            );
+          })}
         </List>
       </Dialog>
     </div>

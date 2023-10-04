@@ -53,7 +53,7 @@ export default function Input(theme: Theme): Components<Theme> {
           fontSize: '0.875rem',
           '& .MuiOutlinedInput-notchedOutline': {
             borderWidth: '2px!important',
-            borderColor: theme.palette.secondary.light,
+            borderColor: theme.palette.secondary.main,
           },
           '&.Mui-disabled': {
             '& .MuiOutlinedInput-notchedOutline': {

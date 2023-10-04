@@ -12,6 +12,7 @@ import {
   Stack,
   TextField,
   Typography,
+  useTheme,
 } from '@mui/material';
 import React, { ReactNode, useState } from 'react';
 import styled, { css } from 'styled-components';
@@ -39,12 +40,14 @@ interface ProductNameProps {
 //   disabled: boolean;
 // }
 const ProductName = styled(Typography)<ProductNameProps>`
-  text-decoration: line-through;
-  text-decoration-color: ${(props) => props.theme.palette.primary.main};
+  /* text-decoration: line-through; */
+  /* text-decoration-color: ${(props) => props.theme.palette.primary.main}; */
+  color: ${(props) => props.theme.palette.grey[600]};
   ${({ checked }) =>
     checked &&
     css`
-      text-decoration: none;
+      color: ${(props) => props.theme.palette.primary.main};
+      /* text-decoration: none; */
     `}
 `;
 
@@ -58,6 +61,7 @@ const ProductName = styled(Typography)<ProductNameProps>`
 // `;
 
 export default function Category1() {
+  const theme = useTheme();
   const dispatch = useAppDispatch();
   const productsList = useAppSelector(getProductsList);
 

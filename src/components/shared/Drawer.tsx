@@ -25,9 +25,12 @@ import PersonOutlineRoundedIcon from '@mui/icons-material/PersonOutlineRounded';
 import DeleteOutlineRoundedIcon from '@mui/icons-material/DeleteOutlineRounded';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
-import CurrentDate from './DatePicker';
+import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
-import { setCheckedProducts } from '@/store/Product/product.slice';
+import { getCheckedProducts, setCheckedProducts } from '@/store/Product/product.slice';
+import { useAppSelector } from '@/hooks/useAppSelector';
+import { getDrawerState, toggleDrawer } from '@/store/drawer.slice';
+import CurrentDate from './DatePicker';
 
 type DrawerProps = {
   open: boolean;
@@ -68,10 +71,15 @@ const ProductsListCard = styled(Card)`
   background-color: ${(props) =>
     props.theme.themeMode === 'light' ? props.theme.palette.common.white : props.theme.palette.grey[800]};
 `;
-export default function ProductList({ open, checkedProducts, onClose }: DrawerProps) {
+export default function ProductList() {
   const theme = useTheme();
   const dispatch = useAppDispatch();
 
+  const checkedProducts = useAppSelector(getCheckedProducts);
+  const sideDrawerOpen = useAppSelector(getDrawerState);
+  const handleDrawerToggle = () => {
+    dispatch(toggleDrawer());
+  };
   const handleCheckboxRemove = (productId: number) => {
     dispatch(setCheckedProducts(productId));
     console.log('productId', productId);
@@ -79,6 +87,9 @@ export default function ProductList({ open, checkedProducts, onClose }: DrawerPr
 
   const [currentDayOfWeek, setCurrentDayOfWeek] = React.useState('');
   const [currentDate, setCurrentDate] = React.useState('');
+  const [name, setName] = React.useState('');
+  const [place, setPlace] = React.useState('');
+  const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
     const date = new Date();
@@ -90,16 +101,33 @@ export default function ProductList({ open, checkedProducts, onClose }: DrawerPr
     setCurrentDayOfWeek(currentDayOfWeek);
   }, []);
 
+  const handleSave = () => {
+    setLoading(true);
+    const existingArray = JSON.parse(localStorage.getItem('myArray')) || [];
+    const newEntry = {
+      id: Math.floor(Math.random() * 100000), // Generate a random numeric ID
+      currentDate: [currentDate],
+      name,
+      place,
+      products: checkedProducts,
+    };
+    existingArray.push(newEntry);
+    localStorage.setItem('myArray', JSON.stringify(existingArray));
+    setTimeout(() => {
+      setLoading(false);
+      handleDrawerToggle();
+    }, 2000);
+  };
   return (
     <DrawerRoot>
-      <Drawer anchor="right" open={open}>
+      <Drawer anchor="right" open={sideDrawerOpen}>
         <Box sx={{ width: '100vw', height: '100%' }} role="presentation">
           <Box className="drawer-container">
             <Stack pt={2} px={2} direction="row" display="flex" alignItems="center" justifyContent="space-between">
               {checkedProducts.length !== 0 && (
                 <Stack direction="row" alignItems="center" sx={{ color: theme.palette.grey[600] }} gap={1}>
                   <TodayOutlinedIcon fontSize="medium" />
-                  <Typography variant="subtitle2" fontSize={16}>
+                  <Typography variant="subtitle2" fontSize={15}>
                     {currentDate}&nbsp;-&nbsp;{currentDayOfWeek}
                   </Typography>
                   {/* <CurrentDate /> */}
@@ -109,7 +137,7 @@ export default function ProductList({ open, checkedProducts, onClose }: DrawerPr
                 <Stack>
                   <IconButton
                     aria-label="close"
-                    onClick={onClose}
+                    onClick={handleDrawerToggle}
                     sx={{
                       p: 1,
                       color: theme.palette.grey[500],
@@ -125,24 +153,35 @@ export default function ProductList({ open, checkedProducts, onClose }: DrawerPr
               </Box>
             </Stack>
             {checkedProducts.length !== 0 && (
-              <Stack
-                my={2}
-                px={2}
-                flexDirection="row"
-                alignItems="center"
-                sx={{ color: theme.palette.grey[600] }}
-                gap={1}
-              >
-                <PersonOutlineOutlinedIcon fontSize="large" />
-                <FormControl fullWidth>
-                  <TextField
-                    variant="standard"
-                    type="text"
-                    placeholder="Enter Name"
-                    fullWidth
-                    sx={{ fontFamily: 'Poppins Regular' }}
-                  />
-                </FormControl>
+              <Stack my={1} px={2} spacing={1} flexDirection="column" sx={{ color: theme.palette.grey[600] }} gap={1}>
+                <Stack flexDirection="row" gap={1}>
+                  <PersonOutlineOutlinedIcon fontSize="large" />
+                  <FormControl fullWidth>
+                    <TextField
+                      variant="standard"
+                      type="text"
+                      placeholder="Enter Name"
+                      fullWidth
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      sx={{ fontFamily: 'Poppins Regular' }}
+                    />
+                  </FormControl>
+                </Stack>
+                <Stack flexDirection="row" gap={1}>
+                  <PlaceOutlinedIcon fontSize="large" />
+                  <FormControl fullWidth>
+                    <TextField
+                      variant="standard"
+                      type="text"
+                      placeholder="Enter Place"
+                      fullWidth
+                      value={place}
+                      onChange={(e) => setPlace(e.target.value)}
+                      sx={{ fontFamily: 'Poppins Regular' }}
+                    />
+                  </FormControl>
+                </Stack>
               </Stack>
             )}
           </Box>
@@ -156,7 +195,9 @@ export default function ProductList({ open, checkedProducts, onClose }: DrawerPr
             >
               <Stack flexDirection="column" alignItems="center">
                 <img src={emptyBox} width={150} alt="" />
-                <Typography variant="subtitle2" fontSize={16}>No data found.</Typography>
+                <Typography variant="subtitle2" fontSize={16}>
+                  No data found.
+                </Typography>
               </Stack>
             </Box>
           )}
@@ -216,7 +257,7 @@ export default function ProductList({ open, checkedProducts, onClose }: DrawerPr
           {checkedProducts.length !== 0 && (
             <Box width="100%" sx={{ display: 'flex', justifyContent: 'end' }} gap={2} py={2} px={2}>
               <Button
-                onClick={onClose}
+                onClick={handleDrawerToggle}
                 variant="contained"
                 sx={{ width: { xs: '100%', md: '10%' } }}
                 size="large"
@@ -224,8 +265,15 @@ export default function ProductList({ open, checkedProducts, onClose }: DrawerPr
               >
                 Cancel
               </Button>
-              <Button variant="contained" size="large" color="primary" sx={{ width: { xs: '100%', md: '10%' } }}>
-                Save
+              <Button
+                variant="contained"
+                size="large"
+                color="primary"
+                sx={{ width: { xs: '100%', md: '10%' } }}
+                onClick={handleSave}
+                disabled={loading}
+              >
+                {loading ? 'Loading...' : 'Save'}
               </Button>
             </Box>
           )}

@@ -74,10 +74,8 @@ export default function CategoryTabs() {
   const [value, setValue] = React.useState(0);
   const tabPanelRefs = React.useRef([]);
 
-  const sideDrawerOpen = useAppSelector(getDrawerState);
   const productsList = useAppSelector(getProductsList);
   const productsListStatus = useAppSelector(getProductsListStatus);
-  const checkedProducts = useAppSelector(getCheckedProducts);
 
   const currentClassListRequest = React.useMemo(() => ({}), []);
 
@@ -178,7 +176,7 @@ export default function CategoryTabs() {
           Item Three
         </TabPanel>
       </SwipeableViews>
-      <ProductList checkedProducts={checkedProducts} open={sideDrawerOpen} onClose={handleDrawerToggle} />;
+      <ProductList  />;
     </CategoryRoot>
   );
 }

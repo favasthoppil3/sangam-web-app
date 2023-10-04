@@ -1,3 +1,4 @@
+import React, { useCallback, useState, useEffect } from 'react';
 import {
   AppBar,
   Box,
@@ -12,32 +13,18 @@ import {
   useTheme,
   IconButton,
   Button,
+  CardContent,
 } from '@mui/material';
-import React, { useCallback, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import TodayOutlinedIcon from '@mui/icons-material/TodayOutlined';
 import DeleteOutlineRoundedIcon from '@mui/icons-material/DeleteOutlineRounded';
-import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
 import styled from 'styled-components';
 import DeleteBox from '@/components/shared/DeleteBox';
-import ViewBox from '@/components/shared/ViwBox';
 import { TOP_BAR_HEIGHT } from '@/config/Constants';
+import ViewBox from '@/components/shared/ViwBox';
+import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
 
-const ListPeople = [
-  'Siri',
-  'Alexa',
-  'Apple',
-  'Orenge',
-  'Siri',
-  'Alexa',
-  'Apple',
-  'Orenge',
-  'Siri',
-  'Alexa',
-  'Apple',
-  'Orenge',
-];
-
+// Styled component for the root div
 const ListCategoriesRoot = styled.div`
   padding: 20px;
   background-color: ${(props) =>
@@ -45,27 +32,52 @@ const ListCategoriesRoot = styled.div`
   min-height: 100vh;
   margin-top: ${TOP_BAR_HEIGHT};
 `;
+
 function ListCategories() {
   const theme = useTheme();
   const [deletePopup, setDeletePopup] = useState(false);
   const [viewPopup, setViewPopup] = useState(false);
-  const handleDeletePopupOpen = () => {
+  const [data, setData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+
+  // Open the delete popup
+  const handleDeletePopupOpen = useCallback(() => {
     setDeletePopup(true);
-  };
-  const handleDeletePopupClose = () => {
+  }, []);
+
+  // Close the delete popup
+  const handleDeletePopupClose = useCallback(() => {
     setDeletePopup(false);
-  };
+  }, []);
 
-  const [searchTerm, setSearchTerm] = React.useState('');
-  const [searchResults, setSearchResults] = React.useState([]);
-
-  const handleChange = (event) => {
+  // Handle change in the search input
+  const handleChange = useCallback((event) => {
     setSearchTerm(event.target.value);
-  };
-  React.useEffect(() => {
-    const results = ListPeople.filter((people) => people.toLowerCase().includes(searchTerm.toLowerCase()));
+  }, []);
+
+  // Handle the delete action
+  const handleDelete = useCallback(
+    (id) => {
+      const updatedData = data.filter((item) => item.id !== id);
+      setData(updatedData);
+      localStorage.setItem('myArray', JSON.stringify(updatedData));
+      setDeletePopup(false);
+    },
+    [data]
+  );
+
+  // Fetch data from local storage on component mount
+  useEffect(() => {
+    const existingArray = JSON.parse(localStorage.getItem('myArray')) || [];
+    setData(existingArray);
+  }, []);
+
+  // Filter search results based on search term
+  useEffect(() => {
+    const results = data.filter((item) => item.name.toLowerCase().includes(searchTerm.toLowerCase()));
     setSearchResults(results);
-  }, [searchTerm]);
+  }, [data, searchTerm]);
 
   return (
     <ListCategoriesRoot>
@@ -84,49 +96,56 @@ function ListCategories() {
         />
       </FormControl>
       <Grid container spacing={2} mb={8}>
-        {searchResults.map((people) => {
-          return (
-            <Grid item lg={3} xs={12}>
-              <Card
-                sx={{
-                  boxShadow: 0,
-                  p: 2,
-                }}
-              >
-                <Box>
-                  <Stack flexDirection="row" justifyContent="space-between" alignItems="center">
-                    <Stack direction="row" alignItems="center" sx={{ color: theme.palette.grey[600] }} gap={1}>
-                      <TodayOutlinedIcon />
-                      <Typography variant="subtitle2" fontSize={16}>
-                        12.02.2023&nbsp;-&nbsp;Friday
-                      </Typography>
-                    </Stack>
-                    <IconButton onClick={handleDeletePopupOpen}>
-                      <DeleteOutlineRoundedIcon sx={{ color: theme.palette.error.main }} />
-                    </IconButton>
-                  </Stack>
+        {searchResults.map((item) => (
+          <Grid key={item.id} item lg={3} xs={12}>
+            <Card
+              sx={{
+                boxShadow: 0,
+                p: 2,
+              }}
+            >
+              <Box>
+                <Stack flexDirection="row" justifyContent="space-between" alignItems="center">
                   <Stack direction="row" alignItems="center" sx={{ color: theme.palette.grey[600] }} gap={1}>
-                    <PlaceOutlinedIcon />
+                    <TodayOutlinedIcon />
                     <Typography variant="subtitle2" fontSize={16}>
-                      Thenkara
+                      {item.currentDate}
                     </Typography>
                   </Stack>
-                  <Stack mt={3} ml={1}>
-                    <Typography variant="h6">{people}</Typography>
-                  </Stack>
-                  <Box display="flex" justifyContent="center" my={1}>
-                    <Button onClick={() => setViewPopup(true)} variant="contained" sx={{ px: 5 }}>
-                      View
-                    </Button>
-                  </Box>
+                  <IconButton onClick={() => handleDelete(item.id)}>
+                    <DeleteOutlineRoundedIcon sx={{ color: theme.palette.error.main }} />
+                  </IconButton>
+                </Stack>
+                <Stack direction="row" alignItems="center" sx={{ color: theme.palette.grey[600] }} gap={1}>
+                  <PlaceOutlinedIcon />
+                  <Typography variant="subtitle2" fontSize={16}>
+                    {item.place}
+                  </Typography>
+                </Stack>
+                <Stack mt={3} ml={1}>
+                  <Typography variant="h6">{item.name}</Typography>
+                </Stack>
+                <Box display="flex" justifyContent="center" my={1}>
+                  <Button onClick={() => setViewPopup(true)} variant="contained" sx={{ px: 5 }}>
+                    View
+                  </Button>
                 </Box>
-              </Card>
-            </Grid>
-          );
-        })}
+              </Box>
+            </Card>
+            <DeleteBox
+              onDelete={() => handleDelete(item.id)}
+              popup={deletePopup}
+              handleClickClose={handleDeletePopupClose}
+            />
+            <ViewBox
+              products={item.products}
+              userName={item.name}
+              popup={viewPopup}
+              handleClickClose={() => setViewPopup(false)}
+            />
+          </Grid>
+        ))}
       </Grid>
-      <DeleteBox popup={deletePopup} handleClickClose={handleDeletePopupClose} />
-      <ViewBox popup={viewPopup} handleClickClose={() => setViewPopup(false)} />
     </ListCategoriesRoot>
   );
 }

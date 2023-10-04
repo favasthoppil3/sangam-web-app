@@ -53,9 +53,10 @@ function BootstrapDialogTitle(props: DialogTitleProps) {
 export type PopupProps = {
   popup: boolean;
   handleClickClose: () => void;
+  onDelete: () => void;
 };
 
-export default function DeleteBox({ popup, handleClickClose }: PopupProps) {
+export default function DeleteBox({ popup, handleClickClose, onDelete }: PopupProps) {
   const theme = useTheme();
   return (
     <div>
@@ -70,7 +71,7 @@ export default function DeleteBox({ popup, handleClickClose }: PopupProps) {
           <Button fullWidth onClick={handleClickClose} variant="contained" color="secondary">
             Cancel
           </Button>
-          <Button fullWidth variant="contained" color="error" onClick={() => {}}>
+          <Button fullWidth variant="contained" color="error" onClick={onDelete}>
             Ok
           </Button>
         </DialogActions>

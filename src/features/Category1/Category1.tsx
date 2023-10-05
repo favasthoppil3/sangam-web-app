@@ -101,10 +101,10 @@ export default function Category1() {
   if (productsListStatus === 'success') {
     BodyContent = productsList.map((item) => (
       <Grid item lg={3} xs={12} key={item.id}>
-        <Card sx={{ boxShadow: 0, p: 2 }}>
+        <Card sx={{ boxShadow: 0, px: 2, py: 1 }}>
           <Box display="flex" justifyContent="space-between" alignItems="center">
             <Stack display="flex" sx={{ flexWrap: 'nowrap' }}>
-              <ProductName variant="subtitle2" fontSize={18} checked={item.checked}>
+              <ProductName variant="subtitle2" fontSize={16} checked={item.checked}>
                 {item.productName}
               </ProductName>
             </Stack>

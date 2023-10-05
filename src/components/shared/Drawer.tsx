@@ -1,80 +1,48 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import Drawer from '@mui/material/Drawer';
-import {
-  Box,
-  OutlinedInput,
-  Typography,
-  Stack,
-  IconButton,
-  ListItem,
-  ListItemText,
-  List,
-  FormControl,
-  useTheme,
-  Card,
-  Grid,
-  Button,
-  TextField,
-} from '@mui/material';
-import { ProductsTypes } from '@/types/ProductCategory';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Stack from '@mui/material/Stack';
+import IconButton from '@mui/material/IconButton';
+import FormControl from '@mui/material/FormControl';
+import useTheme from '@mui/material/styles/useTheme';
+import Card from '@mui/material/Card';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import { useFormik } from 'formik';
 import TodayOutlinedIcon from '@mui/icons-material/TodayOutlined';
 import emptyBox from '@/assets/empty-box.png';
-import styled, { keyframes } from 'styled-components';
-import PersonOutlineRoundedIcon from '@mui/icons-material/PersonOutlineRounded';
-import DeleteOutlineRoundedIcon from '@mui/icons-material/DeleteOutlineRounded';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
-import { useAppDispatch } from '@/hooks/useAppDispatch';
-import { getCheckedProducts, setCheckedProducts } from '@/store/Product/product.slice';
-import { useAppSelector } from '@/hooks/useAppSelector';
+import { getCheckedProducts, getProductsList, setCheckedProducts } from '@/store/Product/product.slice';
 import { getDrawerState, toggleDrawer } from '@/store/drawer.slice';
-import CurrentDate from './DatePicker';
+import styled from 'styled-components';
+import { useAppDispatch } from '@/hooks/useAppDispatch';
+import { useAppSelector } from '@/hooks/useAppSelector';
 
-type DrawerProps = {
-  open: boolean;
-  checkedProducts?: ProductsTypes[];
-  onClose: () => void;
-  Title?: String;
-  inputValue?: number;
-};
-
-const fadeIn = keyframes`
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-`;
 const DrawerRoot = styled.div`
   background-color: ${(props) =>
     props.theme.themeMode === 'light' ? props.theme.palette.grey[200] : props.theme.palette.grey[800]};
 `;
+
 const ProductListRoot = styled(Box)`
   background-color: ${(props) =>
     props.theme.themeMode === 'light' ? props.theme.palette.grey[200] : props.theme.palette.grey[900]};
   width: 100%;
-  height: calc(100vh - 11.3rem);
+  height: calc(100vh - 13.3rem);
   overflow: auto;
-  /* .MuiCard-root {
-    opacity: 1;
-    transition: opacity 0.3s ease-in-out;
-    background-color: ${(props) =>
-    props.theme.themeMode === 'light' ? props.theme.palette.common.white : props.theme.palette.grey[800]};
-  } */
 `;
 
 const ProductsListCard = styled(Card)`
-  /* animation: ${fadeIn} 0.5s ease-in-out; */
   background-color: ${(props) =>
     props.theme.themeMode === 'light' ? props.theme.palette.common.white : props.theme.palette.grey[800]};
 `;
+
 export default function ProductList() {
   const theme = useTheme();
   const dispatch = useAppDispatch();
-
   const checkedProducts = useAppSelector(getCheckedProducts);
   const sideDrawerOpen = useAppSelector(getDrawerState);
   const handleDrawerToggle = () => {
@@ -84,14 +52,10 @@ export default function ProductList() {
     dispatch(setCheckedProducts(productId));
     console.log('productId', productId);
   };
-
-  const [currentDayOfWeek, setCurrentDayOfWeek] = React.useState('');
-  const [currentDate, setCurrentDate] = React.useState('');
-  const [name, setName] = React.useState('');
-  const [place, setPlace] = React.useState('');
-  const [loading, setLoading] = React.useState(false);
-
-  React.useEffect(() => {
+  const [currentDayOfWeek, setCurrentDayOfWeek] = useState('');
+  const [currentDate, setCurrentDate] = useState('');
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
     const date = new Date();
     const dateOption = { day: 'numeric', month: 'numeric', year: 'numeric' };
     const options = { weekday: 'long' };
@@ -100,23 +64,44 @@ export default function ProductList() {
     setCurrentDate(currentDate);
     setCurrentDayOfWeek(currentDayOfWeek);
   }, []);
-
-  const handleSave = () => {
-    setLoading(true);
-    const existingArray = JSON.parse(localStorage.getItem('myArray')) || [];
-    const newEntry = {
-      id: Math.floor(Math.random() * 100000), // Generate a random numeric ID
-      currentDate: [currentDate],
-      name,
-      place,
-      products: checkedProducts,
-    };
-    existingArray.push(newEntry);
-    localStorage.setItem('myArray', JSON.stringify(existingArray));
-    setTimeout(() => {
-      setLoading(false);
-      handleDrawerToggle();
-    }, 2000);
+  const productsList = useAppSelector(getProductsList);
+  const formik = useFormik({
+    initialValues: {
+      name: '',
+      place: '',
+    },
+    validate: (values) => {
+      const errors: any = {};
+      if (!values.name) {
+        errors.name = 'Name is required';
+      }
+      if (!values.place) {
+        errors.place = 'Place is required';
+      }
+      return errors;
+    },
+    onSubmit: (values) => {
+      setLoading(true);
+      const existingArray = JSON.parse(localStorage.getItem('myArray')) || [];
+      const newEntry = {
+        id: Math.floor(Math.random() * 100000),
+        currentDate: [currentDate],
+        name: values.name,
+        place: values.place,
+        products: checkedProducts,
+      };
+      existingArray.push(newEntry);
+      localStorage.setItem('myArray', JSON.stringify(existingArray));
+      setTimeout(() => {
+        setLoading(false);
+        formik.resetForm(); // Reset form on drawer close
+        handleDrawerToggle();
+      }, 2000);
+    },
+  });
+  const handleDrawerClose = () => {
+    formik.resetForm(); // Reset form on drawer close
+    handleDrawerToggle();
   };
   return (
     <DrawerRoot>
@@ -130,14 +115,13 @@ export default function ProductList() {
                   <Typography variant="subtitle2" fontSize={15}>
                     {currentDate}&nbsp;-&nbsp;{currentDayOfWeek}
                   </Typography>
-                  {/* <CurrentDate /> */}
                 </Stack>
               )}
               <Box display="flex" flex={1} justifyContent="end">
                 <Stack>
                   <IconButton
                     aria-label="close"
-                    onClick={handleDrawerToggle}
+                    onClick={handleDrawerClose}
                     sx={{
                       p: 1,
                       color: theme.palette.grey[500],
@@ -155,29 +139,31 @@ export default function ProductList() {
             {checkedProducts.length !== 0 && (
               <Stack my={1} px={2} spacing={1} flexDirection="column" sx={{ color: theme.palette.grey[600] }} gap={1}>
                 <Stack flexDirection="row" gap={1}>
-                  <PersonOutlineOutlinedIcon fontSize="large" />
+                  <PersonOutlineOutlinedIcon fontSize="medium" />
                   <FormControl fullWidth>
                     <TextField
                       variant="standard"
                       type="text"
-                      placeholder="Enter Name"
+                      placeholder={formik.touched.name && formik.errors.name ? formik.errors.name : 'Enter Name'}
                       fullWidth
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
+                      {...formik.getFieldProps('name')}
+                      error={formik.touched.name && formik.errors.name ? true : false}
+                      // helperText={formik.touched.name && formik.errors.name ? formik.errors.name : ''}
                       sx={{ fontFamily: 'Poppins Regular' }}
                     />
                   </FormControl>
                 </Stack>
                 <Stack flexDirection="row" gap={1}>
-                  <PlaceOutlinedIcon fontSize="large" />
+                  <PlaceOutlinedIcon fontSize="medium" />
                   <FormControl fullWidth>
                     <TextField
                       variant="standard"
                       type="text"
-                      placeholder="Enter Place"
+                      placeholder={formik.touched.place && formik.errors.place ? formik.errors.place : 'Enter Place'}
                       fullWidth
-                      value={place}
-                      onChange={(e) => setPlace(e.target.value)}
+                      {...formik.getFieldProps('place')}
+                      error={formik.touched.place && formik.errors.place ? true : false}
+                      // helperText={formik.touched.place && formik.errors.place ? formik.errors.place : ''}
                       sx={{ fontFamily: 'Poppins Regular' }}
                     />
                   </FormControl>
@@ -201,23 +187,21 @@ export default function ProductList() {
               </Stack>
             </Box>
           )}
-
           {checkedProducts.length !== 0 && (
             <ProductListRoot>
               <Grid container spacing={1} mt={1} mb={2}>
                 {checkedProducts.map((product) => (
                   <Grid item lg={3} xs={12} key={product.id}>
-                    <ProductsListCard sx={{ p: 2, mx: 2 }} className="">
+                    <ProductsListCard sx={{ px: 2, py: 1, mx: 2 }} className="">
                       <Box display="flex" justifyContent="space-between" alignItems="center">
                         <Stack display="flex" sx={{ flexWrap: 'nowrap' }}>
-                          <Typography variant="subtitle2" fontSize={18}>
+                          <Typography variant="subtitle2" fontSize={16}>
                             {product.productName}
                           </Typography>
                         </Stack>
                         <Stack flexDirection="row" alignItems="center" gap={5}>
                           {product.inputValue === '' ? (
                             <Typography
-                              border={2}
                               borderColor={theme.palette.error.light}
                               px={2}
                               borderRadius={1}
@@ -228,8 +212,9 @@ export default function ProductList() {
                             </Typography>
                           ) : (
                             <Typography
-                              border={2}
-                              borderColor={theme.palette.primary.main}
+                              borderColor={
+                                product.inputValue === '0' ? theme.palette.error.light : theme.palette.primary.main
+                              }
                               px={2}
                               borderRadius={1}
                               variant="subtitle2"
@@ -253,11 +238,10 @@ export default function ProductList() {
               </Grid>
             </ProductListRoot>
           )}
-
           {checkedProducts.length !== 0 && (
             <Box width="100%" sx={{ display: 'flex', justifyContent: 'end' }} gap={2} py={2} px={2}>
               <Button
-                onClick={handleDrawerToggle}
+                onClick={handleDrawerClose}
                 variant="contained"
                 sx={{ width: { xs: '100%', md: '10%' } }}
                 size="large"
@@ -270,10 +254,10 @@ export default function ProductList() {
                 size="large"
                 color="primary"
                 sx={{ width: { xs: '100%', md: '10%' } }}
-                onClick={handleSave}
-                disabled={loading}
+                onClick={formik.handleSubmit}
+                disabled={loading || formik.errors.name || formik.errors.place}
               >
-                {loading ? 'Loading...' : 'Save'}
+                {loading ? 'Saving...' : 'Save'}
               </Button>
             </Box>
           )}

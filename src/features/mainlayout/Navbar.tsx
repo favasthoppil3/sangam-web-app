@@ -24,7 +24,7 @@ export default function Navbar() {
         <Toolbar sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Stack>
             <Typography sx={{ fontFamily: 'Poppins Regular' }} variant="h6">
-              {/* Sangam */}
+              Sangam
             </Typography>
           </Stack>
 

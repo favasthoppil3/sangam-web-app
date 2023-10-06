@@ -31,7 +31,7 @@ const ProductListRoot = styled(Box)`
   background-color: ${(props) =>
     props.theme.themeMode === 'light' ? props.theme.palette.grey[200] : props.theme.palette.grey[900]};
   width: 100%;
-  height: calc(100vh - 13.3rem);
+  height: calc(100vh - 13.7rem);
   overflow: auto;
 `;
 
@@ -131,15 +131,28 @@ export default function ProductList() {
                       },
                     }}
                   >
-                    <CloseIcon />
+                    <CloseIcon sx={{ color: theme.palette.common.black }} />
                   </IconButton>
                 </Stack>
               </Box>
             </Stack>
             {checkedProducts.length !== 0 && (
-              <Stack my={1} px={2} spacing={1} flexDirection="column" sx={{ color: theme.palette.grey[600] }} gap={1}>
+              <Stack
+                mt={1}
+                mb={2}
+                px={2}
+                spacing={1}
+                flexDirection="column"
+                sx={{ color: theme.palette.grey[600] }}
+                gap={1}
+              >
                 <Stack flexDirection="row" gap={1}>
-                  <PersonOutlineOutlinedIcon fontSize="medium" />
+                  <PersonOutlineOutlinedIcon
+                    fontSize="medium"
+                    sx={{
+                      color: formik.touched.name && formik.errors.name ? theme.palette.error.main : '',
+                    }}
+                  />
                   <FormControl fullWidth>
                     <TextField
                       variant="standard"
@@ -149,12 +162,22 @@ export default function ProductList() {
                       {...formik.getFieldProps('name')}
                       error={formik.touched.name && formik.errors.name ? true : false}
                       // helperText={formik.touched.name && formik.errors.name ? formik.errors.name : ''}
-                      sx={{ fontFamily: 'Poppins Regular' }}
+                      sx={{
+                        fontFamily: 'Poppins Regular',
+                        '& input::placeholder': {
+                          color: formik.touched.name && formik.errors.name ? theme.palette.error.main : '',
+                        },
+                      }}
                     />
                   </FormControl>
                 </Stack>
                 <Stack flexDirection="row" gap={1}>
-                  <PlaceOutlinedIcon fontSize="medium" />
+                  <PlaceOutlinedIcon
+                    fontSize="medium"
+                    sx={{
+                      color: formik.touched.name && formik.errors.name ? theme.palette.error.main : '',
+                    }}
+                  />
                   <FormControl fullWidth>
                     <TextField
                       variant="standard"
@@ -164,7 +187,12 @@ export default function ProductList() {
                       {...formik.getFieldProps('place')}
                       error={formik.touched.place && formik.errors.place ? true : false}
                       // helperText={formik.touched.place && formik.errors.place ? formik.errors.place : ''}
-                      sx={{ fontFamily: 'Poppins Regular' }}
+                      sx={{
+                        fontFamily: 'Poppins Regular',
+                        '& input::placeholder': {
+                          color: formik.touched.name && formik.errors.name ? theme.palette.error.main : '',
+                        },
+                      }}
                     />
                   </FormControl>
                 </Stack>
@@ -189,13 +217,13 @@ export default function ProductList() {
           )}
           {checkedProducts.length !== 0 && (
             <ProductListRoot>
-              <Grid container spacing={1} mt={1} mb={2}>
+              <Grid container spacing={0.5} mt={1.5} mb={2}>
                 {checkedProducts.map((product) => (
                   <Grid item lg={3} xs={12} key={product.id}>
-                    <ProductsListCard sx={{ px: 2, py: 1, mx: 2 }} className="">
+                    <ProductsListCard sx={{ px: 2, py: 2, mx: 2 }} className="">
                       <Box display="flex" justifyContent="space-between" alignItems="center">
                         <Stack display="flex" sx={{ flexWrap: 'nowrap' }}>
-                          <Typography variant="subtitle2" fontSize={16}>
+                          <Typography variant="subtitle2" fontSize={18}>
                             {product.productName}
                           </Typography>
                         </Stack>
@@ -206,7 +234,8 @@ export default function ProductList() {
                               px={2}
                               borderRadius={1}
                               variant="subtitle2"
-                              sx={{ color: theme.palette.error.light }}
+                              // bgcolor={theme.palette.error.main}
+                              sx={{ color: theme.palette.error.main }}
                             >
                               0
                             </Typography>
@@ -219,16 +248,18 @@ export default function ProductList() {
                               borderRadius={1}
                               variant="subtitle2"
                               sx={{
-                                color: product.inputValue === '0' ? theme.palette.error.light : '',
-                                borderColor:
-                                  product.inputValue === '0' ? theme.palette.error.light : theme.palette.primary.main,
+                                // backgroundColor:
+                                //   product.inputValue === '0' ? theme.palette.error.main : theme.palette.primary.main,
+                                color: product.inputValue === '0' ? theme.palette.erro.main : '',
+                                // borderColor:
+                                //   product.inputValue === '0' ? theme.palette.error.light : theme.palette.primary.main,
                               }}
                             >
                               {product.inputValue}
                             </Typography>
                           )}
                           <IconButton size="small" onClick={() => handleCheckboxRemove(product.id)}>
-                            <CloseIcon sx={{ color: theme.palette.error.main }} />
+                            <CloseIcon color="error" />
                           </IconButton>
                         </Stack>
                       </Box>

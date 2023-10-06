@@ -104,7 +104,7 @@ export default function Category1() {
         <Card sx={{ boxShadow: 0, px: 2, py: 1 }}>
           <Box display="flex" justifyContent="space-between" alignItems="center">
             <Stack display="flex" sx={{ flexWrap: 'nowrap' }}>
-              <ProductName variant="subtitle2" fontSize={16} checked={item.checked}>
+              <ProductName variant="subtitle2" fontSize={18} checked={item.checked}>
                 {item.productName}
               </ProductName>
             </Stack>
@@ -120,7 +120,7 @@ export default function Category1() {
                   inputProps={{ maxLength: 4 }}
                 />
               </FormControl>
-              <Checkbox size="medium" checked={item.checked} onChange={() => handleCheckboxChange(item.id)} />
+              <Checkbox size="large" checked={item.checked} onChange={() => handleCheckboxChange(item.id)} />
             </Stack>
           </Box>
         </Card>
@@ -129,7 +129,7 @@ export default function Category1() {
   }
   return (
     <Category1Root>
-      <Grid container spacing={1} mb={12}>
+      <Grid container spacing={0.5} mb={10}>
         {BodyContent}
       </Grid>
     </Category1Root>

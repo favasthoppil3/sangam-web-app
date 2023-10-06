@@ -29,8 +29,12 @@ export default function Button(theme: Theme): Components<Theme> {
             boxShadow: theme.customShadows.primary,
           },
           '&.MuiLoadingButton-root.Mui-disabled': {
-            backgroundColor: 'rgb(255,197,164)',
-            color: '#5e5d5d',
+            backgroundColor: theme.palette.primary.light,
+            color: theme.palette.common.white,
+          },
+          '&.MuiButton-root.Mui-disabled': {
+            backgroundColor: theme.palette.primary.main,
+            color: theme.palette.common.white,
           },
         },
         containedSecondary: {

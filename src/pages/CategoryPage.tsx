@@ -57,7 +57,7 @@ function TabPanel(props: TabPanelProps) {
       aria-labelledby={`full-width-tab-${index}`}
       {...other}
     >
-      {value === index && <Box sx={{ p: 2 }}>{children}</Box>}
+      {value === index && <Box sx={{ p: 1.5 }}>{children}</Box>}
     </div>
   );
 }
@@ -136,8 +136,8 @@ export default function CategoryTabs() {
       <Stack
         className="product_list_button"
         position="fixed"
-        bottom={60}
-        right={10}
+        bottom={55}
+        right={5}
         zIndex={1}
         borderRadius={50}
         boxShadow={5}
@@ -176,7 +176,7 @@ export default function CategoryTabs() {
           Item Three
         </TabPanel>
       </SwipeableViews>
-      <ProductList  />;
+      <ProductList />;
     </CategoryRoot>
   );
 }

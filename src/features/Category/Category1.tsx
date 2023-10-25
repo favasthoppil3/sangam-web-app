@@ -17,10 +17,10 @@ import {
 import React, { ReactNode, useState } from 'react';
 import styled, { css } from 'styled-components';
 import {
-  getProductsList,
+  getCategory1ProductsList,
   getProductsListStatus,
-  setCheckedProducts,
-  setInputValues,
+  setCategory1CheckedProducts,
+  setCategory1InputValues,
 } from '@/store/Product/product.slice';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { useAppSelector } from '@/hooks/useAppSelector';
@@ -63,15 +63,15 @@ const ProductName = styled(Typography)<ProductNameProps>`
 export default function Category1() {
   const theme = useTheme();
   const dispatch = useAppDispatch();
-  const productsList = useAppSelector(getProductsList);
+  const productsList = useAppSelector(getCategory1ProductsList);
 
   const handleCheckboxChange = (productId: number) => {
-    dispatch(setCheckedProducts(productId));
+    dispatch(setCategory1CheckedProducts(productId));
   };
 
   const handleInputChange = (productId: number, productCount: string) => {
     if (/^\d{0,4}$/.test(productCount)) {
-      dispatch(setInputValues({ productId, productCount }));
+      dispatch(setCategory1InputValues({ productId, productCount }));
     }
     // updateProductInput(productId, productCount); // Dispatch the updateProductInput action
   };
@@ -113,7 +113,7 @@ export default function Category1() {
                 <OutlinedInput
                   disabled={item.inputDisabled}
                   type="number"
-                  sx={{ fontFamily: 'Poppins Regular', maxWidth: 65, height: 30 }}
+                  sx={{ fontFamily: 'Poppins Regular', width: 65, height: 30 }}
                   id={`outlined-adornment-amount-${item.id}`}
                   value={item.inputValue || ''}
                   onChange={(event) => handleInputChange(item.id, event.target.value)}
@@ -129,7 +129,7 @@ export default function Category1() {
   }
   return (
     <Category1Root>
-      <Grid container spacing={0.5} mb={10}>
+      <Grid container spacing={0.5} mb={17}>
         {BodyContent}
       </Grid>
     </Category1Root>

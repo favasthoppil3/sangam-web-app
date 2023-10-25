@@ -24,6 +24,9 @@ import { TOP_BAR_HEIGHT } from '@/config/Constants';
 import ViewBox from '@/components/shared/ViwBox';
 import emptyBox from '@/assets/empty-box.png';
 import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
+import { toggleDrawer } from '@/store/drawer.slice';
+import { useAppDispatch } from '@/hooks/useAppDispatch';
+import BillProductsList from '@/components/shared/BillProductsList';
 
 // Styled component for the root div
 const ListCategoriesRoot = styled.div`
@@ -36,6 +39,8 @@ const ListCategoriesRoot = styled.div`
 
 function ListCategories() {
   const theme = useTheme();
+  const dispatch = useAppDispatch();
+
   const [deletePopup, setDeletePopup] = useState(false);
   const [viewPopup, setViewPopup] = useState(false);
   const [data, setData] = useState([]);
@@ -67,6 +72,9 @@ function ListCategories() {
     },
     [data]
   );
+  const handleDrawerToggle = () => {
+    dispatch(toggleDrawer());
+  };
 
   // Fetch data from local storage on component mount
   useEffect(() => {
@@ -113,7 +121,7 @@ function ListCategories() {
         </Box>
       ) : (
         <Grid container spacing={2} mb={8}>
-          {searchResults.map((item) => (
+          {searchResults.reverse().map((item) => (
             <Grid key={item.id} item lg={3} xs={12}>
               <Card
                 sx={{
@@ -139,13 +147,14 @@ function ListCategories() {
                       {item.place}
                     </Typography>
                   </Stack>
-                  <Stack mt={3} ml={1}>
+                  <Stack mt={2} ml={1}>
                     <Typography variant="h6">{item.name}</Typography>
                   </Stack>
-                  <Box display="flex" justifyContent="center" my={1}>
-                    <Button onClick={() => setViewPopup(true)} variant="contained" sx={{ px: 5 }}>
+                  <Box display="flex" justifyContent="center" mt={2} mb={1}>
+                    <Button onClick={handleDrawerToggle} variant="contained" sx={{ px: 5 }}>
                       View
                     </Button>
+                    <BillProductsList products={item.products} userName={item.name} />
                   </Box>
                 </Box>
               </Card>

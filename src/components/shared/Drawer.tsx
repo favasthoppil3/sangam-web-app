@@ -16,11 +16,16 @@ import TodayOutlinedIcon from '@mui/icons-material/TodayOutlined';
 import emptyBox from '@/assets/empty-box.png';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
-import { getCheckedProducts, getProductsList, setCheckedProducts } from '@/store/Product/product.slice';
+import {
+  getAllCategoryCheckedProducts,
+  getCategory1ProductsList,
+  setCategory1CheckedProducts,
+} from '@/store/Product/product.slice';
 import { getDrawerState, toggleDrawer } from '@/store/drawer.slice';
 import styled from 'styled-components';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
 import { useAppSelector } from '@/hooks/useAppSelector';
+import useSettings from '@/hooks/useSettings';
 
 const DrawerRoot = styled.div`
   background-color: ${(props) =>
@@ -43,13 +48,16 @@ const ProductsListCard = styled(Card)`
 export default function ProductList() {
   const theme = useTheme();
   const dispatch = useAppDispatch();
-  const checkedProducts = useAppSelector(getCheckedProducts);
+  const { themeMode } = useSettings();
+  const isLight = themeMode === 'light';
+
+  const checkedProducts = useAppSelector(getAllCategoryCheckedProducts);
   const sideDrawerOpen = useAppSelector(getDrawerState);
   const handleDrawerToggle = () => {
     dispatch(toggleDrawer());
   };
   const handleCheckboxRemove = (productId: number) => {
-    dispatch(setCheckedProducts(productId));
+    dispatch(setCategory1CheckedProducts(productId));
     console.log('productId', productId);
   };
   const [currentDayOfWeek, setCurrentDayOfWeek] = useState('');
@@ -64,7 +72,7 @@ export default function ProductList() {
     setCurrentDate(currentDate);
     setCurrentDayOfWeek(currentDayOfWeek);
   }, []);
-  const productsList = useAppSelector(getProductsList);
+  const productsList = useAppSelector(getCategory1ProductsList);
   const formik = useFormik({
     initialValues: {
       name: '',
@@ -131,7 +139,7 @@ export default function ProductList() {
                       },
                     }}
                   >
-                    <CloseIcon sx={{ color: theme.palette.common.black }} />
+                    <CloseIcon sx={{ color: isLight ? theme.palette.common.black : theme.palette.common.white }} />
                   </IconButton>
                 </Stack>
               </Box>

@@ -5,19 +5,17 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import styled from 'styled-components';
 import SwipeableViews from 'react-swipeable-views';
-import Category1 from '@/features/Category1/Category1';
+import Category1 from '@/features/Category/Category1';
 import { AppBar, Stack, IconButton } from '@mui/material';
-import { TOP_BAR_HEIGHT, TOP_TAB_HEIGHT } from '@/config/Constants';
+import { TOP_BAR_HEIGHT } from '@/config/Constants';
 import BallotRoundedIcon from '@mui/icons-material/BallotRounded';
 import ProductList from '@/components/shared/Drawer';
-import { ProductsTypes } from '@/types/ProductCategory';
-import { connect } from 'react-redux'; // Import connect from react-redux
 import { useAppSelector } from '@/hooks/useAppSelector';
-import { getDrawerState, toggleDrawer } from '@/store/drawer.slice';
 import { useAppDispatch } from '@/hooks/useAppDispatch';
-import { getCheckedProducts, getProductsList, getProductsListStatus } from '@/store/Product/product.slice';
+import { getCategory1ProductsList, getProductsListStatus } from '@/store/Product/product.slice';
 import { fetchProductsList } from '@/store/Product/product.thunks';
-import { request } from 'http';
+import Category2 from '@/features/Category/Category2';
+import { toggleDrawer } from '@/store/drawer.slice';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -41,7 +39,7 @@ const CategoryRoot = styled(Box)`
   }
   .MuiAppBar-root {
     background-color: ${(props) =>
-      props.theme.themeMode === 'light' ? props.theme.palette.grey[200] : props.theme.palette.grey[800]};
+      props.theme.themeMode === 'light' ? props.theme.palette.grey[200] : props.theme.palette.grey[900]};
     top: ${TOP_BAR_HEIGHT};
     border-bottom: 1px solid ${(props) => props.theme.palette.primary.light};
   }
@@ -74,7 +72,7 @@ export default function CategoryTabs() {
   const [value, setValue] = React.useState(0);
   const tabPanelRefs = React.useRef([]);
 
-  const productsList = useAppSelector(getProductsList);
+  const productsList = useAppSelector(getCategory1ProductsList);
   const productsListStatus = useAppSelector(getProductsListStatus);
 
   const currentClassListRequest = React.useMemo(() => ({}), []);
@@ -170,13 +168,13 @@ export default function CategoryTabs() {
           <Category1 />
         </TabPanel>
         <TabPanel ref={(ref) => handleTabPanelRef(ref, 2)} value={value} index={1} dir={theme.direction}>
-          Item Two
+          <Category2 />
         </TabPanel>
         <TabPanel value={value} index={2} dir={theme.direction}>
           Item Three
         </TabPanel>
       </SwipeableViews>
-      <ProductList />;
+      <ProductList />
     </CategoryRoot>
   );
 }
